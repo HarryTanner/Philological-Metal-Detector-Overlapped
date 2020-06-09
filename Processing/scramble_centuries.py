@@ -3,7 +3,7 @@
 import json
 import random
 
-def scramble(json_location="../Output/rounded_dates.json"):
+def scramble(json_location="../JSON/rounded_dates.json"):
 	#Get the files for each century, count them, and create a list of all files
 	with open(json_location, "r") as json_reader:
 		rounded_json=json.load(json_reader)
@@ -42,7 +42,7 @@ def scramble(json_location="../Output/rounded_dates.json"):
 		shuffled_dictionary[century]=nested_century_list
 	return shuffled_dictionary
 
-def store_scrambles(shuffled_dictionary, json_location="../Output/shuffled_files.json"):
+def store_scrambles(shuffled_dictionary, json_location="../JSON/shuffled_files.json"):
 	with open(json_location,"w+") as json_writer:
 		json.dump(shuffled_dictionary, json_writer, ensure_ascii=False)
 

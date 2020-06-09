@@ -1,4 +1,6 @@
-'''A script to clean each text (strip of stopwords) and then concatenate into a century long nested list of sentences
+'''
+This script was used for the first, minimal clean on the texts required simply for the first evaluation of the Word2Vec model
+A script to clean each text (strip of stopwords) and then concatenate into a century long nested list of sentences
 
 This script is used to build the initial Word2Vec models on each individual century, in order to provide a good model of whether Word2Vec could reliably be used
 for Greek on periods as small as a single century'''
