@@ -56,7 +56,7 @@ def clean_century(century, shuffled, json_list="../JSON/rounded_dates.json", dio
 			nested_century.append(nested_sentence)
 	return nested_century
 
-def convert_readable(nested_century, file_name, location="../Texts/Second_Clean"):
+def convert_readable(nested_century, file_name, location="../Texts/Second_Clean/"):
 	full_nested=""
 	for sentence in nested_century:
 		nested_sentence=""

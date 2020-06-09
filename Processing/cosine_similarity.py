@@ -9,30 +9,23 @@ import csv
 import time
 import sys
 
-def build_common_vocab(model_location="../Output/Models/Overlap/"):
+def build_common_vocab(model_location="../Models/Overlap/"):
 	print("Building vocabulary.")
 	#Get all the words in the first model
-	model_0=Word2Vec.load(model_location+"500_-800_-700.model")
-	model_0_words=[]
+	model_0=Word2Vec.load(model_location+"-800_-700.model")
+	#Get all the words in the other models. These names need amending depending on the model names used
+	other_models=[Word2Vec.load(model_location+"-700_-600.model"),Word2Vec.load(model_location+"-600_-400.model"),Word2Vec.load(model_location+"-400_-300.model"),Word2Vec.load(model_location+"-300_-200.model"),Word2Vec.load(model_location+"-200_-100.model"),Word2Vec.load(model_location+"-100_0.model")]
+	mutual_words=[]
 	for word in model_0.wv.vocab:
-		if word!=None:
-			model_0_words.append(word)
-	#Get all the words in the other models
-	other_models=["500_-700_-600.model","500_-600_-400.model","500_-400_-300.model","500_-300_-200.model","500_-200_-100.model","500_-100_-000.model"]
-	other_words=[]
-	for model in other_models:
-		nested_words=[]
-		loaded_model=Word2Vec.load(model_location+model)
-		for word in loaded_model.wv.vocab:
-			if word!=None:
-				nested_words.append(word)
-		other_words.append(nested_words)
-	#For every nested model's words, iterate through model_0_words. If a word is not in nested_model, then delete it
-	for nested in other_words:
-		for word in model_0_words:
-			if word not in nested:
-				model_0_words.remove(word)
-	return model_0_words
+		keep=True
+		for model in other_models:
+			if word not in model.wv.vocab:
+				keep=False
+		if keep==True:
+			mutual_words.append(word)
+		else:
+			pass
+	return mutual_words
 
 def write_csv():
 	start_time=time.time()
@@ -44,18 +37,19 @@ def write_csv():
 		if check=="Y":
 			total=len(common_vocab)
 			counter=0
-			with open("../Output/Similarity/real_similarity_500_sg.csv","w+") as csv_writer:
+			with open("../Similarity/real_similarity_500_sg.csv","w+") as csv_writer:
 				print("Calculating and Exporting Real Similarities for SG 500")
-				columns=["word","500_-800 to 500_-700_-600","500_-700 to 500_-600_-400","500_-600 to 500_-400_-300","500_-400 to 500_-300_-200","500_-300 to 500_-200_-100", "500_-200 to 500_-100_-000"]
+				columns=["word","-800 to -700_-600","-700 to -600_-400","-600 to -400_-300","-400 to -300_-200","-300 to -200_-100", "-200 to -100_0"]
 				writer=csv.DictWriter(csv_writer, fieldnames=columns)
 				writer.writeheader()
 				for word in common_vocab:
 					counter+=1
 					real_dict, error_log=cosine_real(word, error_log)
 					writer.writerow(real_dict)
+					#Provide a progress count so you can head off to watch Lord of the Rings and check on it every so often to see how far through you are :-)
 					print(counter/total)
 			csv_writer.close()
-			'''with open("../Output/Similarity/shuffled_similarity.csv","w+") as csv_writer:
+			with open("../Similarity/shuffled_similarity.csv","w+") as csv_writer:
 				print("Calculating and Exporting Shuffled Similarities.")
 				columns=["word","a to b_c", "b to c_d", "c to d_e", "d to e_f", "e to f_g", "f to g_h"]
 				writer=csv.DictWriter(csv_writer, fieldnames=columns)
@@ -65,7 +59,7 @@ def write_csv():
 					shuffled_dict, error_log=cosine_shuffled(word, error_log)
 					writer.writerow(shuffled_dict)
 					print(counter/total)
-				csv_writer.close()'''
+				csv_writer.close()
 			end_time=time.time()
 			difference=end_time-start_time
 			print("Completed in "+str(difference)+" seconds.")
@@ -78,7 +72,7 @@ def write_csv():
 
 def cosine_real(word, error_log, model_location="../Output/Models/Overlap/"):
 	#Load each model in real
-	real_models=["500_-800_-700.model","500_-700_-600.model","500_-600_-400.model","500_-400_-300.model","500_-300_-200.model","500_-200_-100.model","500_-100_-000.model"]
+	real_models=["-800_-700.model","-700_-600.model","-600_-400.model","-400_-300.model","-300_-200.model","-200_-100.model","-100_0.model"]
 	real_dict={}
 	last_real=6
 	real_dict["word"]=word

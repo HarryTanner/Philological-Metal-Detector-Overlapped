@@ -11,10 +11,10 @@ def initialise_model(model_location="../Models/Overlap", corpus_location="../Tex
 			#Initialise model
 			#Remove the ending .text from each corpus file
 			model_corpus=corpus[:-5]
-			#Train model in 300 dimensions, with skip-gram, read from text file to increase speed. Minimum count set at 1.
+			#Train model in 500 dimensions, with skip-gram, read from text file to increase speed. Minimum count set at 1.
 			print("Training Model for "+str(model_corpus))
-			model=Word2Vec(corpus_file=corpus_location+"/"+corpus, size=500, min_count=1)
-			model.save(model_location+"/"+"500_cbow"+model_corpus+".model")
+			model=Word2Vec(corpus_file=corpus_location+"/"+corpus, size=500, min_count=1, sg=1)
+			model.save(model_location+"/"+model_corpus+".model")
 			print("Finished Training.")
 		else:
 			pass
