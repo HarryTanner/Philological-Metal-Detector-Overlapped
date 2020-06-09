@@ -3,7 +3,7 @@ from gensim.models import Word2Vec
 import os
 import time
 
-def initialise_model(model_location="../Output/Models/Overlap", corpus_location="../Input/Overlap"):
+def initialise_model(model_location="../Models/Overlap", corpus_location="../Texts/Second_Clean"):
 	start_time=time.time()
 	corpora=os.listdir(corpus_location)
 	for corpus in corpora:
