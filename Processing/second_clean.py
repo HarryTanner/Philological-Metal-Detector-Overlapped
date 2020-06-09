@@ -5,17 +5,18 @@ proper nouns at this stage (which will also aid modelling).
 '''
 
 centuries=[[-800,-700],[-700,-600],[-600,-400],[-400,-300],[-300,-200],[-200,-100],[-100, 0]]
+shuffled_centuries=[["a","b"],["b","c"],["c","d"],["d","e"],["e","f"],["f","g"],["g","h"]]
 stopwords=["article","particle","conjunction","preposition","pronoun","proper"]
 
 from lxml import etree
 import json
 
 #The json_list location can be changed as appropriate
-def clean_century(century, shuffled, json_list="../Output/rounded_dates.json", diorisis_location="../Input/Diorisis"):
+def clean_century(century, shuffled, json_list="../JSON/rounded_dates.json", diorisis_location="../Diorisis"):
 	#Takes the overlapping centuries and combines them
 	if shuffled=="y":
 		file_list=[]
-		with open("../Output/shuffled_files.json", "r") as json_reader:
+		with open("../JSON/shuffled_files.json", "r") as json_reader:
 			print("Reading Shuffled list.")
 			date_dictionary=json.load(json_reader)
 		date_list={}
@@ -55,7 +56,7 @@ def clean_century(century, shuffled, json_list="../Output/rounded_dates.json", d
 			nested_century.append(nested_sentence)
 	return nested_century
 
-def convert_readable(nested_century, file_name, location="../Input/Overlap"):
+def convert_readable(nested_century, file_name, location="../Texts/Second_Clean"):
 	full_nested=""
 	for sentence in nested_century:
 		nested_sentence=""
@@ -72,12 +73,15 @@ def convert_readable(nested_century, file_name, location="../Input/Overlap"):
 			full_nested=nested_sentence
 		else:
 			full_nested=full_nested+"\n"+nested_sentence
-	with open("../Input/Overlap/"+file_name,"w+") as file_writer:
+	with open(location+file_name,"w+") as file_writer:
 		file_writer.write(full_nested)
-	file_writer.close()
+		file_writer.close()
 	print("Written to File.")
 
 def start():
 	for century in centuries:
 		overlap_century=clean_century(century, shuffled="n")
+		convert_readable(overlap_century, str(century[0])+"_"+str(century[1])+".text")
+	for shuffled_century in shuffled_centuries:
+		overlap_century=clean_century(shuffled_century, shuffled="y")
 		convert_readable(overlap_century, str(century[0])+"_"+str(century[1])+".text")
